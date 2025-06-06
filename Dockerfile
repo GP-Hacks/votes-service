@@ -1,19 +1,19 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-COPY votes/go.mod ./
+COPY go.mod ./
 RUN go mod download
 
 COPY . .
 
-WORKDIR /app/votes/cmd/votes
+WORKDIR /app/cmd/votes
 RUN go build -o votes_service
 
 FROM alpine:latest
 WORKDIR /root/
 
-COPY --from=builder /app/votes/cmd/votes/votes_service .
+COPY --from=builder /app/cmd/votes/votes_service .
 
 EXPOSE 8080
 
